@@ -1,20 +1,17 @@
 //Dependencies found here
-const inquirer = require("inquirer");
-const mysql = require("mysql");
-const cTable = require("console.table");
-const db = require(".");
+import inquirer from "inquirer";
+import { createConnection } from "mysql";
+import cTable from "console.table";
+import * as db from "./server.mjs";
 
-const connection = mysql.createConnection({
+const connection = createConnection({
   host: "localhost",
-
   // Your port; if not 3306
   port: 3306,
-
   // Your username
   user: "root",
-
   // Your password
-  password: "Morpheus718",
+  password: "@Pawnee225",
   database: "employee_info_db"
 });
 
@@ -28,19 +25,21 @@ connection.connect(function(err) {
 
 //What the user will first see once logged into node
 function startScreen() {
-  inquirer
-    .prompt({
+  inquirer.prompt({
       type: "list",
       choices: [
-        "Add department",
-        "Add role",
-        "Add employee",
-        "View departments",
-        "View roles",
-        "View employees",
-        "Update employee role",
-        "Quit"
+        { name: "Add department", value: "addDepartment" },
+        { name: "Add role", value: "addRole" },
+        { name: "Add employee" },
+        { name: "View departments", value: "viewDepartment" },
+        { name: "View roles", value: "viewRoles" },
+        { name: "View employees", value: "viewEmployees" },
+        { name: "Update employee role", value: "updateEmployee" },
+        { name: "Quit", value: "quit" },
       ],
+      suggest: function (input, choices) {
+        return choices.filter((choice) => choice.name.toLowerCase().startsWith(input.toLowerCase()))
+      },
       message: "What would you like to do?",
       name: "option"
     })
@@ -79,19 +78,12 @@ function startScreen() {
 //All of the corresponding functions found below
 
 function addDepartment() {
-
-
     inquirer.prompt({
-      
         type: "input",
         message: "What is the name of the department?",
         name: "deptName"
-
     }).then(function(answer){
-
-
-
-        connection.query("INSERT INTO department (name) VALUES (?)", [answer.deptName] , function(err, res) {
+        db.insertDepartment("INSERT INTO department (name) VALUES (?)", [answer.deptName] , function(err, res) {
             if (err) throw err;
             console.table(res)
             startScreen()
@@ -101,8 +93,7 @@ function addDepartment() {
 
 
 function addRole() {
-  inquirer
-    .prompt([
+  inquirer.prompt([
       {
         type: "input",
         message: "What's the name of the role?",
@@ -120,8 +111,6 @@ function addRole() {
       }
     ])
     .then(function(answer) {
-
-
       connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.roleName, answer.salaryTotal, answer.deptID], function(err, res) {
         if (err) throw err;
         console.table(res);
@@ -131,8 +120,7 @@ function addRole() {
 }
 
 function addEmployee() {
-  inquirer
-    .prompt([
+  inquirer.prompt([
       {
         type: "input",
         message: "What's the first name of the employee?",
@@ -155,8 +143,6 @@ function addEmployee() {
       }
     ])
     .then(function(answer) {
-
-      
       connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.eeFirstName, answer.eeLastName, answer.roleID, answer.managerID], function(err, res) {
         if (err) throw err;
         console.table(res);
@@ -168,8 +154,7 @@ function addEmployee() {
 //Since we're using inquirer, we can pass the query into the method as an array
 
 function updateEmployee() {
-  inquirer
-    .prompt([
+  inquirer.prompt([
       {
         type: "input",
         message: "Which employee would you like to update?",
@@ -200,7 +185,7 @@ function viewDepartment() {
   let query = "SELECT * FROM department";
   connection.query(query, function(err, res) {
     if (err) throw err;
-    console.table(res);
+    console.table(cTable.getTable(res));
     startScreen();
   });
   // show the result to the user (console.table)
@@ -231,4 +216,5 @@ function viewEmployees() {
 function quit() {
   connection.end();
   process.exit();
-}
+};
+
