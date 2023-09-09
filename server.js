@@ -46,6 +46,7 @@ function startApp() {
                             startApp();
                         })
                     }
+                    viewDepartments();
                     break;
                 case 'View all roles':
                     // Implement the viewRoles function
@@ -62,6 +63,7 @@ function startApp() {
                         });
 
                     }
+                    viewRoles();
                     break;
                 case 'View all employees':
                     // Implement the viewEmployees function
@@ -90,6 +92,7 @@ function startApp() {
                             startApp();
                         })
                     }
+                    viewEmployees();
                     break;
                 case 'Add a department':
                     // Implement the addDepartment function
@@ -118,6 +121,7 @@ function startApp() {
                             })
 
                     }
+                    addDepartment();
                     break;
                 case 'Add a role':
                     // Implement the addRole function
@@ -143,7 +147,7 @@ function startApp() {
                                 {
                                     type: 'input',
                                     name: 'department_id',
-                                    mesage: 'Enter the department ID for the role:',
+                                    message: 'Enter the department ID for the role:',
                                     validate: (input) => {
                                         if (!parseInt(input)) {
                                             return 'Please enter a valid department ID.';
@@ -162,6 +166,7 @@ function startApp() {
                             })
 
                     }
+                    addRole();
                     break;
                 case 'Add an employee':
                     // Implement the addEmployee function\
@@ -210,6 +215,7 @@ function startApp() {
                                 })
                             })
                     }
+                    addEmployee();
                     break;
 
                 case 'Exit':
