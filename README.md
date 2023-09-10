@@ -67,6 +67,9 @@ Update an employee role
 Exit
 Follow the on-screen prompts to interact with the application and manage your company's data.
 
+### Screenshot 
+![Screenshot of deployed app](image.png)
+
 ### Contributing 
 Contributions are welcome! If you'd like to contribute to this project, please follow these guidelines:
 
